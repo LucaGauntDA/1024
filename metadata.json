@@ -1,0 +1,6 @@
+{
+  "name": "Lumina 2048",
+  "description": "Minimalistisches Zahlen-Puzzle im Dark Mode mit leuchtenden Neon-Steinen, haptischen Audio-Effekten und flüssigen Animationen.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
