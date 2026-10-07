@@ -12,8 +12,6 @@ import { GameBoard } from './components/GameBoard';
 import { HeaderHUD } from './components/HeaderHUD';
 import { GameOverModal } from './components/GameOverModal';
 import { WinModal } from './components/WinModal';
-import { InfoModal } from './components/InfoModal';
-import { ChevronUp, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
 
 export default function App() {
   const [gridSize, setGridSize] = useState<number>(4);
@@ -25,7 +23,6 @@ export default function App() {
   const [moves, setMoves] = useState<number>(0);
   const [hasWonThisSession, setHasWonThisSession] = useState<boolean>(false);
   const [isMuted, setIsMuted] = useState<boolean>(false);
-  const [showInfo, setShowInfo] = useState<boolean>(false);
   const [scoreBonus, setScoreBonus] = useState<{ id: number; value: number } | null>(null);
   const [mergedPositions, setMergedPositions] = useState<
     Array<{ row: number; col: number; value: number }>
@@ -116,7 +113,7 @@ export default function App() {
       const outcome = moveBoard(tiles, direction, gridSize);
 
       if (!outcome.moved) {
-        return; // No valid moves in this direction
+        return;
       }
 
       // Save to undo history before applying change (keep up to 12 steps)
@@ -135,7 +132,6 @@ export default function App() {
 
       // Audio and haptic feedback
       if (outcome.mergedPositions.length > 0) {
-        // Find highest merged value for musical chime
         const maxMerged = Math.max(...outcome.mergedPositions.map(p => p.value));
         soundEngine.playMerge(maxMerged);
 
@@ -153,9 +149,9 @@ export default function App() {
       setMoves(prev => prev + 1);
       setMergedPositions(outcome.mergedPositions);
 
-      // Check for win condition (2048)
-      const has2048 = nextTiles.some(t => t.value >= 2048);
-      if (has2048 && !hasWonThisSession) {
+      // Check for win condition (1024)
+      const has1024 = nextTiles.some(t => t.value >= 1024);
+      if (has1024 && !hasWonThisSession) {
         setHasWonThisSession(true);
         setStatus('WON');
         soundEngine.playWin();
@@ -172,13 +168,12 @@ export default function App() {
   );
 
   return (
-    <main className="min-h-screen bg-[#08090d] text-zinc-100 flex flex-col justify-between p-3.5 sm:p-6 md:p-8 relative overflow-hidden select-none">
-      {/* Ambient background glows for high-end Apple dark mode aesthetic */}
-      <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[600px] h-[350px] bg-cyan-600/[0.04] rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-[-10%] left-1/2 -translate-x-1/2 w-[600px] h-[350px] bg-amber-600/[0.03] rounded-full blur-[140px] pointer-events-none" />
+    <main className="min-h-screen bg-black text-zinc-100 flex flex-col justify-center items-center p-2.5 sm:p-5 md:p-6 lg:p-8 relative overflow-hidden select-none">
+      {/* Subtle background ambient depth */}
+      <div className="absolute top-[-15%] left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-cyan-600/[0.03] rounded-full blur-[140px] pointer-events-none" />
 
-      {/* Main Content Area */}
-      <div className="w-full max-w-xl mx-auto flex-1 flex flex-col items-center justify-center relative z-10">
+      {/* Main Content Area: Centered cleanly for iPad & desktop */}
+      <div className="w-full max-w-2xl mx-auto flex flex-col items-center justify-center relative z-10">
         <div className="w-full flex flex-col items-center animate-fade-in">
           {/* Header HUD with score and controls */}
           <HeaderHUD
@@ -191,10 +186,9 @@ export default function App() {
             onRestart={handleRestart}
             onUndo={handleUndo}
             onToggleSound={handleToggleSound}
-            onOpenInfo={() => setShowInfo(true)}
           />
 
-          {/* The 2048 Game Board */}
+          {/* The 1024 Game Board */}
           <GameBoard
             tiles={tiles}
             size={gridSize}
@@ -203,49 +197,8 @@ export default function App() {
             scoreBonus={scoreBonus}
             mergedPositions={mergedPositions}
           />
-
-          {/* Directional buttons for tablet / accessibility affordance */}
-          <div className="mt-4 sm:mt-6 flex flex-col items-center gap-1.5 opacity-60 hover:opacity-100 transition-opacity">
-            <button
-              onClick={() => handleMove('UP')}
-              className="w-10 h-8 rounded-xl bg-zinc-900/80 border border-white/5 hover:border-white/20 flex items-center justify-center text-zinc-400 hover:text-white transition-all active:scale-95 cursor-pointer"
-              aria-label="Nach oben verschieben"
-            >
-              <ChevronUp className="w-4 h-4" />
-            </button>
-            <div className="flex items-center gap-3">
-              <button
-                onClick={() => handleMove('LEFT')}
-                className="w-10 h-8 rounded-xl bg-zinc-900/80 border border-white/5 hover:border-white/20 flex items-center justify-center text-zinc-400 hover:text-white transition-all active:scale-95 cursor-pointer"
-                aria-label="Nach links verschieben"
-              >
-                <ChevronLeft className="w-4 h-4" />
-              </button>
-              <button
-                onClick={() => handleMove('DOWN')}
-                className="w-10 h-8 rounded-xl bg-zinc-900/80 border border-white/5 hover:border-white/20 flex items-center justify-center text-zinc-400 hover:text-white transition-all active:scale-95 cursor-pointer"
-                aria-label="Nach unten verschieben"
-              >
-                <ChevronDown className="w-4 h-4" />
-              </button>
-              <button
-                onClick={() => handleMove('RIGHT')}
-                className="w-10 h-8 rounded-xl bg-zinc-900/80 border border-white/5 hover:border-white/20 flex items-center justify-center text-zinc-400 hover:text-white transition-all active:scale-95 cursor-pointer"
-                aria-label="Nach rechts verschieben"
-              >
-                <ChevronRight className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
         </div>
       </div>
-
-      {/* Subtle minimalist footer */}
-      <footer className="w-full max-w-xl mx-auto pt-3 text-center text-xs text-zinc-600 flex items-center justify-center gap-2.5 relative z-10">
-        <span>Lumina 2048</span>
-        <span>·</span>
-        <span>Wischen oder Pfeiltasten</span>
-      </footer>
 
       {/* Overlays / Modals */}
       {status === 'GAME_OVER' && (
@@ -268,8 +221,6 @@ export default function App() {
           onRestart={handleRestart}
         />
       )}
-
-      {showInfo && <InfoModal onClose={() => setShowInfo(false)} />}
     </main>
   );
 }

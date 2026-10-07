@@ -9,7 +9,7 @@ export interface TileTheme {
 
 export const TILE_THEMES: Record<number, TileTheme> = {
   2: {
-    bg: 'bg-cyan-950/40',
+    bg: 'bg-[#090b10]',
     text: 'text-cyan-300',
     border: 'border-cyan-500/40',
     glow: 'rgba(34, 211, 238, 0.25)',
@@ -17,7 +17,7 @@ export const TILE_THEMES: Record<number, TileTheme> = {
     particleColor: '#22d3ee',
   },
   4: {
-    bg: 'bg-teal-950/45',
+    bg: 'bg-[#070e0f]',
     text: 'text-teal-300',
     border: 'border-teal-400/45',
     glow: 'rgba(45, 212, 191, 0.28)',
@@ -25,7 +25,7 @@ export const TILE_THEMES: Record<number, TileTheme> = {
     particleColor: '#2dd4bf',
   },
   8: {
-    bg: 'bg-emerald-950/50',
+    bg: 'bg-[#060f09]',
     text: 'text-emerald-300',
     border: 'border-emerald-400/50',
     glow: 'rgba(52, 211, 153, 0.32)',
@@ -33,7 +33,7 @@ export const TILE_THEMES: Record<number, TileTheme> = {
     particleColor: '#34d399',
   },
   16: {
-    bg: 'bg-amber-950/50',
+    bg: 'bg-[#100d05]',
     text: 'text-amber-300',
     border: 'border-amber-400/55',
     glow: 'rgba(251, 191, 36, 0.35)',
@@ -41,7 +41,7 @@ export const TILE_THEMES: Record<number, TileTheme> = {
     particleColor: '#fbbf24',
   },
   32: {
-    bg: 'bg-orange-950/55',
+    bg: 'bg-[#120a04]',
     text: 'text-orange-300',
     border: 'border-orange-400/60',
     glow: 'rgba(251, 146, 60, 0.38)',
@@ -49,7 +49,7 @@ export const TILE_THEMES: Record<number, TileTheme> = {
     particleColor: '#fb923c',
   },
   64: {
-    bg: 'bg-rose-950/60',
+    bg: 'bg-[#120608]',
     text: 'text-rose-300',
     border: 'border-rose-400/65',
     glow: 'rgba(251, 113, 133, 0.42)',
@@ -57,44 +57,44 @@ export const TILE_THEMES: Record<number, TileTheme> = {
     particleColor: '#fb7185',
   },
   128: {
-    bg: 'bg-fuchsia-950/65',
-    text: 'text-fuchsia-300',
-    border: 'border-fuchsia-400/70',
-    glow: 'rgba(232, 121, 249, 0.45)',
-    shadow: '0 0 28px rgba(232, 121, 249, 0.38), inset 0 1px 2px rgba(255, 255, 255, 0.22)',
-    particleColor: '#e879f9',
+    bg: 'bg-[#100404]',
+    text: 'text-red-400',
+    border: 'border-red-500/70',
+    glow: 'rgba(248, 113, 113, 0.45)',
+    shadow: '0 0 28px rgba(248, 113, 113, 0.38), inset 0 1px 2px rgba(255, 255, 255, 0.22)',
+    particleColor: '#f87171',
   },
   256: {
-    bg: 'bg-purple-950/70',
-    text: 'text-purple-200',
-    border: 'border-purple-400/75',
-    glow: 'rgba(192, 132, 252, 0.5)',
-    shadow: '0 0 32px rgba(192, 132, 252, 0.42), inset 0 1px 2px rgba(255, 255, 255, 0.25)',
-    particleColor: '#c084fc',
-  },
-  512: {
-    bg: 'bg-indigo-950/75',
-    text: 'text-indigo-200',
-    border: 'border-indigo-400/80',
-    glow: 'rgba(129, 140, 248, 0.55)',
-    shadow: '0 0 36px rgba(129, 140, 248, 0.45), inset 0 1px 2px rgba(255, 255, 255, 0.28)',
-    particleColor: '#818cf8',
-  },
-  1024: {
-    bg: 'bg-blue-950/80',
-    text: 'text-sky-200',
-    border: 'border-sky-300/85',
-    glow: 'rgba(56, 189, 248, 0.6)',
-    shadow: '0 0 40px rgba(56, 189, 248, 0.5), inset 0 1px 3px rgba(255, 255, 255, 0.3)',
+    bg: 'bg-[#03070d]',
+    text: 'text-sky-300',
+    border: 'border-sky-400/80',
+    glow: 'rgba(56, 189, 248, 0.55)',
+    shadow: '0 0 32px rgba(56, 189, 248, 0.42), inset 0 1px 2px rgba(255, 255, 255, 0.25)',
     particleColor: '#38bdf8',
   },
-  2048: {
-    bg: 'bg-amber-900/85',
-    text: 'text-amber-100',
+  512: {
+    bg: 'bg-[#020a06]',
+    text: 'text-emerald-200',
+    border: 'border-emerald-300/85',
+    glow: 'rgba(52, 211, 153, 0.65)',
+    shadow: '0 0 36px rgba(52, 211, 153, 0.5), inset 0 1px 2px rgba(255, 255, 255, 0.28)',
+    particleColor: '#34d399',
+  },
+  1024: {
+    bg: 'bg-[#0a0700]',
+    text: 'text-amber-200',
     border: 'border-amber-300',
     glow: 'rgba(251, 191, 36, 0.85)',
-    shadow: '0 0 48px rgba(251, 191, 36, 0.7), 0 0 15px rgba(255, 255, 255, 0.4), inset 0 1px 4px rgba(255, 255, 255, 0.4)',
+    shadow: '0 0 44px rgba(251, 191, 36, 0.7), 0 0 16px rgba(255, 255, 255, 0.3), inset 0 1px 3px rgba(255, 255, 255, 0.35)',
     particleColor: '#facc15',
+  },
+  2048: {
+    bg: 'bg-[#000000]',
+    text: 'text-white',
+    border: 'border-white',
+    glow: 'rgba(255, 255, 255, 0.9)',
+    shadow: '0 0 50px rgba(255, 255, 255, 0.8), 0 0 20px rgba(251, 191, 36, 0.5), inset 0 1px 4px rgba(255, 255, 255, 0.5)',
+    particleColor: '#ffffff',
   },
 };
 
@@ -103,13 +103,13 @@ export function getTileTheme(value: number): TileTheme {
     return TILE_THEMES[value];
   }
 
-  // Beyond 2048: Supernova Aurora theme
+  // Beyond 2048: Deep piano black with radiant white/cyan aura
   return {
-    bg: 'bg-violet-950/90',
+    bg: 'bg-[#000000]',
     text: 'text-white',
-    border: 'border-pink-400',
-    glow: 'rgba(244, 114, 182, 0.9)',
-    shadow: '0 0 52px rgba(244, 114, 182, 0.8), 0 0 20px rgba(255, 255, 255, 0.5)',
-    particleColor: '#f472b6',
+    border: 'border-cyan-300',
+    glow: 'rgba(34, 211, 238, 0.9)',
+    shadow: '0 0 52px rgba(34, 211, 238, 0.8), 0 0 20px rgba(255, 255, 255, 0.5)',
+    particleColor: '#22d3ee',
   };
 }

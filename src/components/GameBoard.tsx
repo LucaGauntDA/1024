@@ -192,14 +192,14 @@ export const GameBoard: React.FC<GameBoardProps> = ({
     const r = Math.floor(index / size);
     const c = index % size;
     return (
-      <div key={`cell-${r}-${c}`} className="p-1.5 sm:p-2">
-        <div className="w-full h-full rounded-2xl sm:rounded-3xl bg-[#141721]/80 border border-white/[0.04] shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)] transition-colors duration-200" />
+      <div key={`cell-${r}-${c}`} className="p-1 sm:p-1.5 md:p-2">
+        <div className="w-full h-full rounded-2xl sm:rounded-3xl bg-[#09090c] border border-white/[0.04] shadow-[inset_0_2px_5px_rgba(0,0,0,0.8)] transition-colors duration-200" />
       </div>
     );
   });
 
   return (
-    <div className="relative w-full max-w-[420px] sm:max-w-[480px] md:max-w-[500px] aspect-square mx-auto touch-none select-none">
+    <div className="relative w-full max-w-[440px] sm:max-w-[520px] md:max-w-[580px] lg:max-w-[620px] landscape:max-w-[min(90vw,calc(100vh-175px),620px)] aspect-square mx-auto touch-none select-none">
       {/* Score gain floating pill */}
       {scoreBonus && (
         <div
@@ -221,11 +221,11 @@ export const GameBoard: React.FC<GameBoardProps> = ({
         onMouseLeave={() => {
           mouseStartRef.current = null;
         }}
-        className="relative w-full h-full p-2 sm:p-3 rounded-3xl bg-[#0e1017] border border-white/[0.08] shadow-[0_20px_50px_rgba(0,0,0,0.7),inset_0_1px_1px_rgba(255,255,255,0.06)] backdrop-blur-xl transition-transform duration-100 ease-out cursor-grab active:cursor-grabbing"
+        className="relative w-full h-full p-1.5 sm:p-2.5 md:p-3 rounded-3xl bg-[#040406] border border-white/[0.09] shadow-[0_20px_50px_rgba(0,0,0,0.9),inset_0_1px_1px_rgba(255,255,255,0.06)] backdrop-blur-xl transition-transform duration-100 ease-out cursor-grab active:cursor-grabbing"
         style={{
           transform: `translate3d(${boardNudge.x}px, ${boardNudge.y}px, 0)`,
         }}
-        aria-label="2048 Spielfeld"
+        aria-label="1024 Spielfeld"
         role="grid"
       >
         {/* Background grid cells */}

@@ -10,13 +10,6 @@ interface TileViewProps {
 export const TileView: React.FC<TileViewProps> = memo(({ tile, size }) => {
   const theme = getTileTheme(tile.value);
 
-  // Calculate layout percentages
-  // For 4x4 with 12px gap:
-  // We can calculate position as percentage:
-  // cellSizePercent = (100 - (size - 1) * gapPercent) / size
-  // Or even simpler: step = 100% / size, with inner padding/margin!
-  // If we give each cell width: `${100 / size}%` and padding: `4px` or `6px`,
-  // then translation is simply `col * 100%` and `row * 100%`!
   const stepPercent = 100 / size;
   const transformStyle = {
     transform: `translate3d(${tile.col * 100}%, ${tile.row * 100}%, 0)`,
@@ -24,17 +17,22 @@ export const TileView: React.FC<TileViewProps> = memo(({ tile, size }) => {
     height: `${stepPercent}%`,
   };
 
-  // Font sizing based on number of digits
+  // Font sizing adjusted for larger responsive iPad layout
   const getFontSize = (val: number) => {
-    if (val < 100) return 'text-3xl sm:text-4xl md:text-5xl';
-    if (val < 1000) return 'text-2xl sm:text-3xl md:text-4xl';
-    if (val < 10000) return 'text-xl sm:text-2xl md:text-3xl';
-    return 'text-lg sm:text-xl md:text-2xl';
+    if (size === 5) {
+      if (val < 100) return 'text-2xl sm:text-3xl md:text-4xl';
+      if (val < 1000) return 'text-xl sm:text-2xl md:text-3xl';
+      return 'text-lg sm:text-xl md:text-2xl';
+    }
+    if (val < 100) return 'text-3xl sm:text-4xl md:text-5xl lg:text-6xl';
+    if (val < 1000) return 'text-2xl sm:text-3xl md:text-4xl lg:text-5xl';
+    if (val < 10000) return 'text-xl sm:text-2xl md:text-3xl lg:text-4xl';
+    return 'text-lg sm:text-xl md:text-2xl lg:text-3xl';
   };
 
   return (
     <div
-      className="absolute top-0 left-0 p-1.5 sm:p-2 will-change-transform transition-transform duration-150 ease-[cubic-bezier(0.18,0.89,0.32,1.15)]"
+      className="absolute top-0 left-0 p-1 sm:p-1.5 md:p-2 will-change-transform transition-transform duration-150 ease-[cubic-bezier(0.18,0.89,0.32,1.15)]"
       style={transformStyle}
       data-testid={`tile-${tile.row}-${tile.col}`}
     >
@@ -46,8 +44,8 @@ export const TileView: React.FC<TileViewProps> = memo(({ tile, size }) => {
           boxShadow: theme.shadow,
         }}
       >
-        {/* Subtle top glare / Apple-esque specularity */}
-        <div className="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/12 to-transparent pointer-events-none rounded-t-2xl sm:rounded-t-3xl" />
+        {/* Subtle top glare / Apple specularity */}
+        <div className="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/10 to-transparent pointer-events-none rounded-t-2xl sm:rounded-t-3xl" />
 
         {/* Ambient center radial glow */}
         <div
@@ -69,10 +67,10 @@ export const TileView: React.FC<TileViewProps> = memo(({ tile, size }) => {
           {tile.value}
         </span>
 
-        {/* Crown indicator for legendary 2048+ tiles */}
-        {tile.value >= 2048 && (
-          <span className="absolute bottom-1.5 text-[9px] uppercase tracking-widest font-semibold opacity-80 text-amber-200">
-            ★ LUMINA
+        {/* Crown indicator for 1024+ target tiles */}
+        {tile.value >= 1024 && (
+          <span className="absolute bottom-1 sm:bottom-1.5 text-[8px] sm:text-[9px] uppercase tracking-widest font-semibold opacity-85 text-amber-200">
+            ★ 1024
           </span>
         )}
       </div>

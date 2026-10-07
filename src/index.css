@@ -8,7 +8,7 @@
 
   body {
     font-family: var(--font-sans);
-    background-color: #08090d;
+    background-color: #000000;
     color: #f4f4f5;
     touch-action: pan-y;
     -webkit-font-smoothing: antialiased;
