@@ -6,6 +6,8 @@ interface HeaderHUDProps {
   bestScore: number;
   canUndo: boolean;
   isMuted: boolean;
+  gridSize: number;
+  onSelectSize: (size: number) => void;
   onRestart: () => void;
   onUndo: () => void;
   onToggleSound: () => void;
@@ -17,13 +19,15 @@ export const HeaderHUD: React.FC<HeaderHUDProps> = ({
   bestScore,
   canUndo,
   isMuted,
+  gridSize,
+  onSelectSize,
   onRestart,
   onUndo,
   onToggleSound,
   onOpenInfo,
 }) => {
   return (
-    <header className="w-full max-w-[480px] sm:max-w-[500px] mx-auto mb-5 sm:mb-7 flex flex-col gap-4">
+    <header className="w-full max-w-[480px] sm:max-w-[500px] mx-auto mb-4 sm:mb-6 flex flex-col gap-3.5">
       {/* Top zone: Brand & Actions */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2.5">
@@ -90,10 +94,10 @@ export const HeaderHUD: React.FC<HeaderHUDProps> = ({
         </div>
       </div>
 
-      {/* Score and Highscore Glass Cards */}
-      <div className="grid grid-cols-2 gap-3">
+      {/* Score and Highscore Glass Cards + Size Switcher */}
+      <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
         {/* Current Score */}
-        <div className="p-3.5 sm:p-4 rounded-2xl bg-[#0f1118]/80 border border-white/[0.07] backdrop-blur-md relative overflow-hidden flex flex-col items-center justify-center shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)]">
+        <div className="p-3 sm:p-3.5 rounded-2xl bg-[#0f1118]/80 border border-white/[0.07] backdrop-blur-md relative overflow-hidden flex flex-col items-center justify-center shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)]">
           <span className="text-[10px] sm:text-[11px] font-semibold tracking-wider uppercase text-zinc-400 mb-0.5">
             Punkte
           </span>
@@ -103,13 +107,41 @@ export const HeaderHUD: React.FC<HeaderHUDProps> = ({
         </div>
 
         {/* Best Score */}
-        <div className="p-3.5 sm:p-4 rounded-2xl bg-[#0f1118]/80 border border-white/[0.07] backdrop-blur-md relative overflow-hidden flex flex-col items-center justify-center shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)]">
+        <div className="p-3 sm:p-3.5 rounded-2xl bg-[#0f1118]/80 border border-white/[0.07] backdrop-blur-md relative overflow-hidden flex flex-col items-center justify-center shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)]">
           <span className="text-[10px] sm:text-[11px] font-semibold tracking-wider uppercase text-amber-400/80 mb-0.5 flex items-center gap-1">
             Rekord
           </span>
           <span className="font-mono text-2xl sm:text-3xl font-extrabold text-amber-300 tabular-nums tracking-tight">
             {bestScore.toLocaleString('de-DE')}
           </span>
+        </div>
+      </div>
+
+      {/* Minimalist Grid Size Selector (3x3, 4x4, 5x5) */}
+      <div className="flex items-center justify-between px-1">
+        <span className="text-[11px] text-zinc-500 font-medium">Raster</span>
+        <div className="bg-[#11131b] p-0.5 rounded-xl border border-white/[0.06] flex items-center gap-1 shadow-inner">
+          {[
+            { size: 3, label: '3×3' },
+            { size: 4, label: '4×4' },
+            { size: 5, label: '5×5' },
+          ].map(item => {
+            const isActive = gridSize === item.size;
+            return (
+              <button
+                key={item.size}
+                onClick={() => onSelectSize(item.size)}
+                className={`px-2.5 py-1 rounded-lg text-xs font-mono font-medium transition-all ${
+                  isActive
+                    ? 'bg-zinc-800 text-white shadow-sm border border-white/10'
+                    : 'text-zinc-500 hover:text-zinc-300'
+                }`}
+                aria-label={`Rastergröße ${item.label}`}
+              >
+                {item.label}
+              </button>
+            );
+          })}
         </div>
       </div>
     </header>

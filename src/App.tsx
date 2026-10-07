@@ -10,7 +10,6 @@ import {
 import { soundEngine } from './utils/audio';
 import { GameBoard } from './components/GameBoard';
 import { HeaderHUD } from './components/HeaderHUD';
-import { StartScreen } from './components/StartScreen';
 import { GameOverModal } from './components/GameOverModal';
 import { WinModal } from './components/WinModal';
 import { InfoModal } from './components/InfoModal';
@@ -18,8 +17,8 @@ import { ChevronUp, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react'
 
 export default function App() {
   const [gridSize, setGridSize] = useState<number>(4);
-  const [status, setStatus] = useState<GameStatus>('MENU');
-  const [tiles, setTiles] = useState<Tile[]>([]);
+  const [status, setStatus] = useState<GameStatus>('PLAYING');
+  const [tiles, setTiles] = useState<Tile[]>(() => createInitialTiles(4));
   const [score, setScore] = useState<number>(0);
   const [bestScore, setBestScore] = useState<number>(0);
   const [history, setHistory] = useState<BoardHistory[]>([]);
@@ -47,14 +46,6 @@ export default function App() {
       setIsMuted(soundEngine.getMuted());
     } catch {}
   }, [gridSize]);
-
-  // Autostart support for testability and URL deep linking (?autostart=1)
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    if (params.get('autostart') === '1') {
-      startGame(4);
-    }
-  }, []);
 
   // Update best score whenever current score exceeds it
   useEffect(() => {
@@ -85,6 +76,15 @@ export default function App() {
   const handleRestart = useCallback(() => {
     startGame(gridSize);
   }, [startGame, gridSize]);
+
+  // Change grid size and start fresh board
+  const handleSelectSize = useCallback(
+    (newSize: number) => {
+      if (newSize === gridSize) return;
+      startGame(newSize);
+    },
+    [gridSize, startGame]
+  );
 
   // Undo move
   const handleUndo = useCallback(() => {
@@ -172,97 +172,79 @@ export default function App() {
   );
 
   return (
-    <main className="min-h-screen bg-[#08090d] text-zinc-100 flex flex-col justify-between p-4 sm:p-6 md:p-8 relative overflow-hidden select-none">
+    <main className="min-h-screen bg-[#08090d] text-zinc-100 flex flex-col justify-between p-3.5 sm:p-6 md:p-8 relative overflow-hidden select-none">
       {/* Ambient background glows for high-end Apple dark mode aesthetic */}
       <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[600px] h-[350px] bg-cyan-600/[0.04] rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-[-10%] left-1/2 -translate-x-1/2 w-[600px] h-[350px] bg-amber-600/[0.03] rounded-full blur-[140px] pointer-events-none" />
 
       {/* Main Content Area */}
       <div className="w-full max-w-xl mx-auto flex-1 flex flex-col items-center justify-center relative z-10">
-        {status === 'MENU' ? (
-          <StartScreen
-            onStart={startGame}
+        <div className="w-full flex flex-col items-center animate-fade-in">
+          {/* Header HUD with score and controls */}
+          <HeaderHUD
+            score={score}
             bestScore={bestScore}
-            selectedSize={gridSize}
-            onSelectSize={setGridSize}
+            canUndo={history.length > 0}
+            isMuted={isMuted}
+            gridSize={gridSize}
+            onSelectSize={handleSelectSize}
+            onRestart={handleRestart}
+            onUndo={handleUndo}
+            onToggleSound={handleToggleSound}
+            onOpenInfo={() => setShowInfo(true)}
           />
-        ) : (
-          <div className="w-full flex flex-col items-center animate-fade-in">
-            {/* Header HUD with score and controls */}
-            <HeaderHUD
-              score={score}
-              bestScore={bestScore}
-              canUndo={history.length > 0}
-              isMuted={isMuted}
-              onRestart={handleRestart}
-              onUndo={handleUndo}
-              onToggleSound={handleToggleSound}
-              onOpenInfo={() => setShowInfo(true)}
-            />
 
-            {/* The 2048 Game Board */}
-            <GameBoard
-              tiles={tiles}
-              size={gridSize}
-              onMove={handleMove}
-              disabled={status !== 'PLAYING'}
-              scoreBonus={scoreBonus}
-              mergedPositions={mergedPositions}
-            />
+          {/* The 2048 Game Board */}
+          <GameBoard
+            tiles={tiles}
+            size={gridSize}
+            onMove={handleMove}
+            disabled={status !== 'PLAYING'}
+            scoreBonus={scoreBonus}
+            mergedPositions={mergedPositions}
+          />
 
-            {/* Directional buttons for tablet / accessibility affordance */}
-            <div className="mt-5 sm:mt-7 flex flex-col items-center gap-1.5 opacity-60 hover:opacity-100 transition-opacity">
+          {/* Directional buttons for tablet / accessibility affordance */}
+          <div className="mt-4 sm:mt-6 flex flex-col items-center gap-1.5 opacity-60 hover:opacity-100 transition-opacity">
+            <button
+              onClick={() => handleMove('UP')}
+              className="w-10 h-8 rounded-xl bg-zinc-900/80 border border-white/5 hover:border-white/20 flex items-center justify-center text-zinc-400 hover:text-white transition-all active:scale-95 cursor-pointer"
+              aria-label="Nach oben verschieben"
+            >
+              <ChevronUp className="w-4 h-4" />
+            </button>
+            <div className="flex items-center gap-3">
               <button
-                onClick={() => handleMove('UP')}
-                className="w-10 h-8 rounded-xl bg-zinc-900/80 border border-white/5 hover:border-white/20 flex items-center justify-center text-zinc-400 hover:text-white transition-all active:scale-95"
-                aria-label="Nach oben verschieben"
+                onClick={() => handleMove('LEFT')}
+                className="w-10 h-8 rounded-xl bg-zinc-900/80 border border-white/5 hover:border-white/20 flex items-center justify-center text-zinc-400 hover:text-white transition-all active:scale-95 cursor-pointer"
+                aria-label="Nach links verschieben"
               >
-                <ChevronUp className="w-4 h-4" />
+                <ChevronLeft className="w-4 h-4" />
               </button>
-              <div className="flex items-center gap-3">
-                <button
-                  onClick={() => handleMove('LEFT')}
-                  className="w-10 h-8 rounded-xl bg-zinc-900/80 border border-white/5 hover:border-white/20 flex items-center justify-center text-zinc-400 hover:text-white transition-all active:scale-95"
-                  aria-label="Nach links verschieben"
-                >
-                  <ChevronLeft className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={() => handleMove('DOWN')}
-                  className="w-10 h-8 rounded-xl bg-zinc-900/80 border border-white/5 hover:border-white/20 flex items-center justify-center text-zinc-400 hover:text-white transition-all active:scale-95"
-                  aria-label="Nach unten verschieben"
-                >
-                  <ChevronDown className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={() => handleMove('RIGHT')}
-                  className="w-10 h-8 rounded-xl bg-zinc-900/80 border border-white/5 hover:border-white/20 flex items-center justify-center text-zinc-400 hover:text-white transition-all active:scale-95"
-                  aria-label="Nach rechts verschieben"
-                >
-                  <ChevronRight className="w-4 h-4" />
-                </button>
-              </div>
+              <button
+                onClick={() => handleMove('DOWN')}
+                className="w-10 h-8 rounded-xl bg-zinc-900/80 border border-white/5 hover:border-white/20 flex items-center justify-center text-zinc-400 hover:text-white transition-all active:scale-95 cursor-pointer"
+                aria-label="Nach unten verschieben"
+              >
+                <ChevronDown className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => handleMove('RIGHT')}
+                className="w-10 h-8 rounded-xl bg-zinc-900/80 border border-white/5 hover:border-white/20 flex items-center justify-center text-zinc-400 hover:text-white transition-all active:scale-95 cursor-pointer"
+                aria-label="Nach rechts verschieben"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </button>
             </div>
           </div>
-        )}
+        </div>
       </div>
 
       {/* Subtle minimalist footer */}
-      <footer className="w-full max-w-xl mx-auto pt-4 text-center text-xs text-zinc-600 flex items-center justify-center gap-3 relative z-10">
+      <footer className="w-full max-w-xl mx-auto pt-3 text-center text-xs text-zinc-600 flex items-center justify-center gap-2.5 relative z-10">
         <span>Lumina 2048</span>
         <span>·</span>
         <span>Wischen oder Pfeiltasten</span>
-        {status !== 'MENU' && (
-          <>
-            <span>·</span>
-            <button
-              onClick={() => setStatus('MENU')}
-              className="text-zinc-500 hover:text-zinc-300 transition-colors cursor-pointer"
-            >
-              Menü
-            </button>
-          </>
-        )}
       </footer>
 
       {/* Overlays / Modals */}
