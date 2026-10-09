@@ -1,5 +1,6 @@
 import React from 'react';
 import { Volume2, VolumeX, RotateCcw, Undo2 } from 'lucide-react';
+import { Logo1024 } from './Logo1024';
 
 interface HeaderHUDProps {
   score: number;
@@ -28,13 +29,9 @@ export const HeaderHUD: React.FC<HeaderHUDProps> = ({
     <header className="w-full max-w-[440px] sm:max-w-[520px] md:max-w-[580px] lg:max-w-[620px] mx-auto mb-3.5 sm:mb-5 flex flex-col gap-3">
       {/* Top zone: Brand & Actions */}
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-500 to-amber-400 p-[1px] shadow-[0_0_15px_rgba(34,211,238,0.3)]">
-            <div className="w-full h-full bg-black rounded-[11px] flex items-center justify-center">
-              <span className="font-mono text-xs font-bold text-cyan-300">1K</span>
-            </div>
-          </div>
-          <h1 className="text-2xl font-extrabold tracking-tight text-white font-mono">
+        <div className="flex items-center gap-3">
+          <Logo1024 className="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl shadow-[0_0_20px_rgba(30,111,232,0.25)] border border-white/10" />
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white font-mono">
             1024
           </h1>
         </div>
